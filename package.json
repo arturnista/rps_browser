@@ -1,0 +1,19 @@
+{
+  "name": "rps_browser",
+  "version": "1.0.0",
+  "description": "Rock, paper and scissors online game.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/arturnista/rps_browser.git"
+  },
+  "author": "Artur Nista",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arturnista/rps_browser/issues"
+  },
+  "homepage": "https://github.com/arturnista/rps_browser#readme"
+}
