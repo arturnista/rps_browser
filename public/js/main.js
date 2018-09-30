@@ -56,7 +56,8 @@ window.onload = () => {
 function updateGameState(game) {
     console.log(player.id)
     if(game.status === 'finish') {
-        if(game.winner[player.id].points > 0) winModal.style.display = 'inherit'
+        const winnerData = game.winner.find(x => x.id == player.id)
+        if(winnerData.points > 0) winModal.style.display = 'inherit'
         else loseModal.style.display = 'inherit'
     }
 }
