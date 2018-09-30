@@ -91,7 +91,8 @@ class Server {
                 let body = ''
                 req.on('data', (data) => body += data)
                 req.on('end', () => {
-                    req.body = JSON.parse(body)
+                    if(body.length > 0) req.body = JSON.parse(body)
+                    else req.body = {}
                     this.methods[req.method][url.pathname](req, res)
                 })       
                 break

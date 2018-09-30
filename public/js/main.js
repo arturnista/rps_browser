@@ -1,28 +1,54 @@
+let game = null
+let player = null
+let winModal = null
+let loseModal = null
+
 window.onload = () => {
-    const winModal = document.getElementById("win-modal")
-    const loseModal = document.getElementById("lose-modal")
+    winModal = document.getElementById("win-modal")
+    loseModal = document.getElementById("lose-modal")
 
-    let game = window.location.search.match(/[\?\&]game=[^\?^\&]*/g)
-    if(game) game = game[0].replace('?game=', '')
+    let gameId = window.location.search.match(/[\?\&]game=[^\?^\&]*/g)
+    if(gameId) gameId = gameId[0].replace('?game=', '')
 
-    if(game) {
-        console.log('ENTER!')
-    } else {
-        console.log('CREATE!')
-    }
-
-    window.selectOption = (option) => {
-        fetch('/option', {
-            method: 'POST',
+    if(gameId) {
+        fetch('/game', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ option, game })
+            body: JSON.stringify({ game: gameId })
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res)
+            game = res.game
+            player = res.player
         })
-        winModal.style.display = 'inherit'
+    } else {
+        fetch('/game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            game = res.game
+            player = res.player
+        })
     }
+}
+
+function selectOption(option) {
+    fetch('/option', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ option, game: game.id })
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res)
+    })
+    // winModal.style.display = 'inherit'
 }

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/arturnista/rps_browser#readme",
   "devDependencies": {
     "expect.js": "^0.3.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "sinon": "^6.3.4"
   }
 }
