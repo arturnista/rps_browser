@@ -1,7 +1,9 @@
+let games = []
+
 class Adapter {
 
     constructor(deps = {}) {
-        this.games = []
+        // this.games = games
     }
 
     generateId() {
@@ -9,16 +11,17 @@ class Adapter {
     }
 
     create(data) {
-        this.games.push(data)
+        games.push(data)
+        return data
     }
 
-    update(id, data) {
-        this.games = this.games.map(x => x.id == id ? Object.assign({}, x, data) : x)
-        return data
+    update(data) {
+        games = games.map(x => x.id == data.id ? Object.assign({}, x, data) : x)
+        return games.find(x => x.id == data.id)
     }
     
     find(id) {
-        this.games.find(x => x.id == id)
+        return games.find(x => x.id == id)
     }
 
 }

@@ -13,26 +13,34 @@ class Interactor {
     create() {
         const entity = new this.Entity()
         
-        const gameData = entity.create()
-        const game = entity.find(gameData.id)
-        const player = entity.addPlayer(game)
+        let game = entity.generateData()
+        game = entity.addPlayer(game)
+        const gameState = entity.setGameState(game)
+        game = entity.create(Object.assign({}, game, gameState))
 
-        return {
-            game: gameData,
-            player
-        }
+        return game
     } 
     
     enter(body) {
         const entity = new this.Entity()
         
-        const game = entity.find(body.game)
-        const player = entity.addPlayer(game)
+        let game = entity.find(body.game)
+        game = entity.addPlayer(game)
+        game = entity.setGameState(game)
+        game = entity.update(game)
 
-        return {
-            game,
-            player
-        }
+        return game
+    }
+
+    playerOption(body) {
+        const entity = new this.Entity()
+        
+        let game = entity.find(body.game)
+        game = entity.updatePlayer(game, { id: body.player, option: body.option })
+        game = entity.setGameState(game)
+        game = entity.update(game)
+
+        return game
     }
 
 }

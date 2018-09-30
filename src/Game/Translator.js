@@ -41,6 +41,18 @@ class Translator {
             res.json(500, err)
         }
     }
+
+    postOption(req, res) {
+        const interactor = new this.Interactor()
+        
+        try {
+            const result = interactor.playerOption(req.body)
+            res.json(200, result)
+        } catch(err) {
+            console.log(err)
+            res.json(500, err)
+        }
+    }
 }
 
 module.exports = Translator

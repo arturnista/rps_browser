@@ -8,7 +8,11 @@ describe('Game Interactor', () => {
         Entity: class {
             find() {}
             create() {}
+            update() {}
+            generateData() {}
             addPlayer() {}
+            updatePlayer() {}
+            setGameState() {}
         }
     }
 
@@ -48,33 +52,40 @@ describe('Game Interactor', () => {
         it('should create a new game and add a player', () => {
 
             const expectedResult = {
-                game: {
-                    id: 'game-id',
-                    game: 'data'
-                }, 
-                player: {
-                    player: 'data'
-                }
+                update: 'data'
             }
 
             entMock = sinon.mock(deps.Entity.prototype)
-            entMock.expects('create')
+            entMock.expects('generateData')
                 .once()
                 .returns({
                     id: 'game-id',
                     game: 'data'
                 })
-            entMock.expects('find')
-                .once()
-                .withArgs('game-id')
-                .returns({ 
-                    find: 'result'
-                })
             entMock.expects('addPlayer')
                 .once()
-                .withArgs({ find: 'result' })
+                .withArgs({
+                    id: 'game-id',
+                    game: 'data'
+                })
                 .returns({
-                    player: 'data'
+                    addPlayer: 'data'
+                })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    addPlayer: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('create')
+                .once()
+                .withArgs({
+                    setGameState: 'data'
+                })
+                .returns({
+                    update: 'data'
                 })
 
             const interactor = new GameInteractor(deps)
@@ -92,13 +103,8 @@ describe('Game Interactor', () => {
         it('should find the game and add a player', () => {
 
             const expectedResult = {
-                game: {
-                    id: 'game-id',
-                    game: 'data'
-                }, 
-                player: {
-                    player: 'data'
-                }
+                id: 'game-id',
+                game: 'data'
             }
 
             entMock = sinon.mock(deps.Entity.prototype)
@@ -118,9 +124,84 @@ describe('Game Interactor', () => {
                 .returns({
                     player: 'data'
                 })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    player: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('update')
+                .once()
+                .withArgs({
+                    setGameState: 'data'
+                })
+                .returns({
+                    id: 'game-id',
+                    game: 'data'
+                })
 
             const interactor = new GameInteractor(deps)
             const result = interactor.enter({ game: 'game-id' })
+            
+            expect(result).to.eql(expectedResult)
+            
+            entMock.verify()
+        })
+
+    })
+    
+    describe('playerOption method', () => {
+
+        it('should update the player with the new option', () => {
+
+            const expectedResult = {
+                id: 'GAME-ID',
+                game: 'data'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('GAME-ID')
+                .returns({
+                    id: 'GAME-ID',
+                    game: 'data'
+                })
+            entMock.expects('updatePlayer')
+                .once()
+                .withArgs({
+                    id: 'GAME-ID',
+                    game: 'data'
+                }, { id: 'PLAYER-ID', option: 'rock' })
+                .returns({
+                    player: 'data'
+                })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    player: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('update')
+                .once()
+                .withArgs({
+                    setGameState: 'data'
+                })
+                .returns({
+                    id: 'GAME-ID',
+                    game: 'data'
+                })
+
+            const interactor = new GameInteractor(deps)
+            const result = interactor.playerOption({
+                game: 'GAME-ID',
+                player: 'PLAYER-ID',
+                option: 'rock'
+            })
             
             expect(result).to.eql(expectedResult)
             

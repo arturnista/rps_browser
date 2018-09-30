@@ -9,6 +9,7 @@ describe('Game translator', () => {
             find() {}
             create() {}
             enter() {}
+            playerOption() {}
         }
     }
 
@@ -180,6 +181,43 @@ describe('Game translator', () => {
 
             const translator = new GameTranslator(deps)
             translator.put(req, res)
+            
+            intMock.verify()
+            resMock.verify()
+        })
+
+    })
+    
+    describe('postOption method', () => {
+
+        it('should create the game and return the game data', () => {
+
+            const expectedResult = {
+                id: 'game-id',
+                game: 'data'
+            }
+
+            const req = {
+                body: { body: 'data' }
+            }
+
+            const res = {
+                json: () => {}
+            }
+
+            intMock = sinon.mock(deps.Interactor.prototype)
+            intMock.expects('playerOption')
+                .once()
+                .withArgs({ body: 'data' })
+                .returns(expectedResult)
+
+            resMock = sinon.mock(res)
+            resMock.expects('json')
+                .once()
+                .withArgs(200, expectedResult)
+
+            const translator = new GameTranslator(deps)
+            translator.postOption(req, res)
             
             intMock.verify()
             resMock.verify()

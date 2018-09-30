@@ -39,7 +39,7 @@ window.onload = () => {
 }
 
 function selectOption(option) {
-    fetch('/option', {
+    fetch('/game/option', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

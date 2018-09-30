@@ -18,7 +18,8 @@ server.put('/game', (req, res) => {
     translator.put(req, res)
 })
 server.post('/game/option', (req, res) => {
-    res.json(200, { status: 'ok' })
+    const translator = new GameTranslator()
+    translator.postOption(req, res)
 })
 server.get('/main.css', (req, res) => {
     res.file(200, './public/css/main.css')
