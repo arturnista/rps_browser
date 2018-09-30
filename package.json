@@ -2,9 +2,11 @@
   "name": "rps_browser",
   "version": "1.0.0",
   "description": "Rock, paper and scissors online game.",
-  "main": "server.js",
+  "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon",
+    "test": "mocha --recursive --reporter progress tests",
+    "watch": "mocha --recursive --reporter progress --watch tests"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/arturnista/rps_browser/issues"
   },
-  "homepage": "https://github.com/arturnista/rps_browser#readme"
+  "homepage": "https://github.com/arturnista/rps_browser#readme",
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^5.2.0"
+  }
 }
