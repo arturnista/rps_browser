@@ -113,18 +113,18 @@ describe('Game Entity', () => {
                 players: [],
                 config: {
                     rock: {
-                        win: ['scissor'],
+                        win: ['scissors'],
                         lose: ['paper'],
                         draw: ['rock'],
                     }, 
-                    scissor: {
+                    scissors: {
                         win: ['paper'],
                         lose: ['rock'],
-                        draw: ['scissor'],
+                        draw: ['scissors'],
                     }, 
                     paper: {
                         win: ['rock'],
-                        lose: ['scissor'],
+                        lose: ['scissors'],
                         draw: ['paper'],
                     }
                 },
@@ -299,18 +299,18 @@ describe('Game Entity', () => {
                 id: 'GAME-ID',
                 config: {
                     rock: {
-                        win: ['scissor'],
+                        win: ['scissors'],
                         lose: ['paper'],
                         draw: ['rock'],
                     }, 
-                    scissor: {
+                    scissors: {
                         win: ['paper'],
                         lose: ['rock'],
-                        draw: ['scissor'],
+                        draw: ['scissors'],
                     }, 
                     paper: {
                         win: ['rock'],
-                        lose: ['scissor'],
+                        lose: ['scissors'],
                         draw: ['paper'],
                     }
                 },
@@ -350,18 +350,18 @@ describe('Game Entity', () => {
                 id: 'GAME-ID',
                 config: {
                     rock: {
-                        win: ['scissor'],
+                        win: ['scissors'],
                         lose: ['paper'],
                         draw: ['rock'],
                     }, 
-                    scissor: {
+                    scissors: {
                         win: ['paper'],
                         lose: ['rock'],
-                        draw: ['scissor'],
+                        draw: ['scissors'],
                     }, 
                     paper: {
                         win: ['rock'],
-                        lose: ['scissor'],
+                        lose: ['scissors'],
                         draw: ['paper'],
                     }
                 },
@@ -375,7 +375,7 @@ describe('Game Entity', () => {
                     status: 'ready'
                 }, {
                     id: '3',
-                    option: 'scissor',
+                    option: 'scissors',
                     status: 'ready'
                 }, {
                     id: '4',

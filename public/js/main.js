@@ -21,7 +21,7 @@ window.onload = () => {
         .then(res => res.json())
         .then(res => {
             game = res.game
-            player = res.player
+            player = { id: res.player }
         })
     } else {
         fetch('/game', {
@@ -33,8 +33,31 @@ window.onload = () => {
         .then(res => res.json())
         .then(res => {
             game = res.game
-            player = res.player
+            player = { id: res.player }
+
+            document.getElementById('enter-game-link').setAttribute('href', `/?game=${game.id}`)
         })
+    }
+
+    setInterval(function() {
+
+        fetch(`/game?game=${game.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(updateGameState)
+
+    }, 1000)
+}
+
+function updateGameState(game) {
+    console.log(player.id)
+    if(game.status === 'finish') {
+        if(game.winner[player.id].points > 0) winModal.style.display = 'inherit'
+        else loseModal.style.display = 'inherit'
     }
 }
 
@@ -44,7 +67,7 @@ function selectOption(option) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ option, game: game.id })
+        body: JSON.stringify({ option, game: game.id, player: player.id })
     })
     .then(res => res.json())
     .then(res => {

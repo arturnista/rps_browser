@@ -29,18 +29,18 @@ class Entity {
             players: [],
             config: {
                 rock: {
-                    win: ['scissor'],
+                    win: ['scissors'],
                     lose: ['paper'],
                     draw: ['rock'],
                 }, 
-                scissor: {
+                scissors: {
                     win: ['paper'],
                     lose: ['rock'],
-                    draw: ['scissor'],
+                    draw: ['scissors'],
                 }, 
                 paper: {
                     win: ['rock'],
-                    lose: ['scissor'],
+                    lose: ['scissors'],
                     draw: ['paper'],
                 }
             },
