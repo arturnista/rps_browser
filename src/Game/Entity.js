@@ -58,7 +58,10 @@ class Entity {
         }
 
         game.players.push(playerData)
-        return game
+        return {
+            game,
+            player: playerData.id
+        }
     }
 
     updatePlayer(game, player) {

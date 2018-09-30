@@ -52,7 +52,10 @@ describe('Game Interactor', () => {
         it('should create a new game and add a player', () => {
 
             const expectedResult = {
-                update: 'data'
+                game: {
+                    update: 'data'
+                }, 
+                player: 'NEW-ID'
             }
 
             entMock = sinon.mock(deps.Entity.prototype)
@@ -69,7 +72,10 @@ describe('Game Interactor', () => {
                     game: 'data'
                 })
                 .returns({
-                    addPlayer: 'data'
+                    game: {
+                        addPlayer: 'data'
+                    }, 
+                    player: 'NEW-ID'
                 })
             entMock.expects('setGameState')
                 .once()
@@ -82,6 +88,7 @@ describe('Game Interactor', () => {
             entMock.expects('create')
                 .once()
                 .withArgs({
+                    addPlayer: 'data',
                     setGameState: 'data'
                 })
                 .returns({
@@ -103,8 +110,11 @@ describe('Game Interactor', () => {
         it('should find the game and add a player', () => {
 
             const expectedResult = {
-                id: 'game-id',
-                game: 'data'
+                game: {
+                    id: 'game-id',
+                    game: 'data'
+                },
+                player: 'PLAYER-ID'
             }
 
             entMock = sinon.mock(deps.Entity.prototype)
@@ -122,7 +132,10 @@ describe('Game Interactor', () => {
                     game: 'data'
                 })
                 .returns({
-                    player: 'data'
+                    game: {
+                        player: 'data'
+                    },
+                    player: 'PLAYER-ID'
                 })
             entMock.expects('setGameState')
                 .once()

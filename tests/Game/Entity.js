@@ -146,12 +146,15 @@ describe('Game Entity', () => {
         it('should add a new player to the game', () => {
 
             const expectedResult = {
-                id: 'GAME-ID',
-                players: [{
-                    id: 'NEW-ID',
-                    status: 'selecting',
-                    option: ''
-                }]
+                game: {
+                    id: 'GAME-ID',
+                    players: [{
+                        id: 'NEW-ID',
+                        status: 'selecting',
+                        option: ''
+                    }]
+                },
+                player: 'NEW-ID'
             }
 
             const entity = new GameEntity(deps)
@@ -166,14 +169,17 @@ describe('Game Entity', () => {
         it('should add a new player to the game, even with other players', () => {
 
             const expectedResult = {
-                id: 'GAME-ID',
-                players: [{
-                    id: '1', status: 'selecting', option: ''
-                }, {
-                    id: 'NEW-ID',
-                    status: 'selecting',
-                    option: ''
-                }]
+                game: {
+                    id: 'GAME-ID',
+                    players: [{
+                        id: '1', status: 'selecting', option: ''
+                    }, {
+                        id: 'NEW-ID',
+                        status: 'selecting',
+                        option: ''
+                    }]
+                },
+                player: 'NEW-ID'
             }
 
             const entity = new GameEntity(deps)
