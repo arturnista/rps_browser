@@ -2,6 +2,7 @@ class Server {
 
     constructor(deps = {}) {
 
+        this.urlDeps = deps.url || require('url')
         this.httpDeps = deps.http || require('http')
         this.fsDeps = deps.fs || require('fs')
 
@@ -13,11 +14,12 @@ class Server {
         }
 
         this.server = this.httpDeps.createServer(this.handleRequest.bind(this))
-        
     }
 
     handleRequest(req, res) {
-        if(!this.methods[req.method] || !this.methods[req.method][req.url]) {
+        let url = new this.urlDeps.URL(`http://localhost${req.url}`)
+        
+        if(!this.methods[req.method] || !this.methods[req.method][url.pathname]) {
             res.statusCode = 500
             res.setHeader('content-type', 'application/json')
             res.write(JSON.stringify({ error: 'method not defined', status: 500 }))
@@ -82,7 +84,21 @@ class Server {
             })
         }
         
-        this.methods[req.method][req.url](req, res)
+        req.url = url
+        switch (req.method) {
+            case 'POST':
+            case 'PUT':
+                let body = ''
+                req.on('data', (data) => body += data)
+                req.on('end', () => {
+                    req.body = JSON.parse(body)
+                    this.methods[req.method][url.pathname](req, res)
+                })       
+                break
+            default:
+                this.methods[req.method][url.pathname](req, res)
+                break
+        }
     }
 
     get(url, callback) {

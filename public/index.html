@@ -3,14 +3,41 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Rock, Paper and Scissors</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
     <script src="/main.js"></script>
 </head>
 <body>
-    <div>
-        <h1>Test!</h1>
-    </div>
+    <header>
+        <h1>Rock, Paper and Scissors</h1>
+    </header>
+    <content>
+        <div class='game-option' onclick="selectOption('rock')">
+            <p>Rock</p>
+        </div>
+        <div class='game-option' onclick="selectOption('paper')">
+            <p>Paper</p>
+         </div>
+        <div class='game-option' onclick="selectOption('scissors')">
+            <p>Scissors</p>
+        </div>
+
+        <div id='win-modal' class='modal win'>
+            <div class='modal-content win'>
+                <p>YOU WON!</p>
+            </div>
+        </div>
+
+        <div id='lose-modal' class='modal lose'>
+            <div class='modal-content lose'>
+                <p>YOU LOSE!</p>
+            </div>
+        </div>
+    </content>
+    <footer>
+
+    </footer>
 </body>
 </html>

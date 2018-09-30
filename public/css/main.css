@@ -1,3 +1,120 @@
-h1 {
-    color: blue;
+html {
+    margin: 0;
 }
+
+p {
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+
+    font-family: 'Open Sans', sans-serif;
+    background-color: #E1E2E1;
+    margin: 0;
+
+    display: grid;
+    grid-template-rows: 150px 1fr 3em;
+}
+
+header {
+    background-color: #388e3c;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+content {
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 20% 20% 20%;
+    justify-content: space-around;
+}
+
+.game-option {
+    height: 20%;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    border: 1px #00600f solid;
+    background-color: #00600f30;
+
+    cursor: pointer;
+    transition: 300ms all;
+}
+.game-option:hover {
+    background-color: #00600f80;
+}
+
+.game-option p {
+    margin: 0;
+    display: inline;
+    font-size: 1em;
+    transition: 300ms all;
+}
+.game-option:hover p {
+    font-size: 2em;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #FAFAFA;
+    margin-top: 0;
+    padding: 3em;
+
+    display: flex;
+    
+    animation-name: slide-anim;
+    animation-duration: 800ms;
+}
+@keyframes slide-anim {
+    from {
+        margin-top: -100vh;
+    }
+    to {
+        margin-top: 0;
+    }
+}
+
+.modal.win {
+    display: none;
+    background-color: #00600f80;
+}
+
+.modal-content.win {
+    border: 1px #00600f solid;
+}
+
+.modal.lose {
+    display: none;
+    background-color: #7f000080;
+}
+
+.modal-content.lose {
+    border: 1px #7f0000 solid;
+}
+
+
+footer {
+    background-color: #6abf69;
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+}
+
