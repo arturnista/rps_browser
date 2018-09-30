@@ -22,8 +22,31 @@ header {
     margin: 0;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-content: center;
+}
+
+header h1 {
+    text-align: center;
+}
+
+header div {
+    display: flex;
+    padding: 0 3em 0 3em;
+}
+
+header div input {
+    flex: 1;
+    text-align: center;
+    border: none;
+}
+
+header div a {
+    height: 2em;
+    padding: 0 .5em 0 .5em;
+    background-color: #FFCC00;
+    color: #212121;
 }
 
 content {
@@ -33,12 +56,35 @@ content {
     justify-content: space-around;
 }
 
-.game-option {
-    height: 20%;
+.game-versus {
+    grid-column: 1 / 4;
+    text-align: center;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-content: center;
+}
+.game-versus p {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.game-option {
+    height: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+
+    border: 1px #212121 solid;
+    background-color: #21212130;
+}
+
+.game-option.option {
+    align-self: self-end;
 
     border: 1px #00600f solid;
     background-color: #00600f30;
@@ -46,18 +92,25 @@ content {
     cursor: pointer;
     transition: 300ms all;
 }
-.game-option:hover {
+.game-option.option:hover {
     background-color: #00600f80;
+}
+.game-option.not-selected {
+    opacity: .5;
+}
+.game-option.selected {
+    align-self: self-end;
+    background-color: #00600f90;
 }
 
 .game-option p {
     margin: 0;
-    display: inline;
+    text-align: center;
     font-size: 1em;
     transition: 300ms all;
 }
-.game-option:hover p {
-    font-size: 2em;
+.game-option.select:hover p {
+    /* font-size: 2em; */
 }
 .modal {
     position: fixed;
@@ -69,6 +122,7 @@ content {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #21212180;
 }
 
 .modal-content {
@@ -92,20 +146,26 @@ content {
 
 .modal.win {
     display: none;
-    background-color: #00600f80;
 }
 
 .modal-content.win {
-    border: 1px #00600f solid;
+    border: 2px #6abf69 solid;
 }
 
 .modal.lose {
     display: none;
-    background-color: #7f000080;
 }
 
 .modal-content.lose {
-    border: 1px #7f0000 solid;
+    border: 2px #db0e0e solid;
+}
+
+.modal.draw {
+    display: none;
+}
+
+.modal-content.draw {
+    border: 2px #FFCC00 solid;
 }
 
 

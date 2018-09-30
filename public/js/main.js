@@ -2,6 +2,7 @@ let game = null
 let player = null
 let winModal = null
 let loseModal = null
+let lastRoundNumber = 0
 
 window.onload = () => {
     winModal = document.getElementById("win-modal")
@@ -36,6 +37,7 @@ window.onload = () => {
             player = { id: res.player }
 
             document.getElementById('enter-game-link').setAttribute('href', `/?game=${game.id}`)
+            document.getElementById('enter-game-input').setAttribute('value', `${window.location.origin}/?game=${game.id}`)
         })
     }
 
@@ -53,16 +55,38 @@ window.onload = () => {
     }, 1000)
 }
 
-function updateGameState(game) {
-    console.log(player.id)
-    if(game.status === 'finish') {
-        const winnerData = game.winner.find(x => x.id == player.id)
+function updateGameState(currentGameState) {
+    if(currentGameState.round !== game.round) {
+        const winnerData = currentGameState.lastRound.find(x => x.id == player.id)
         if(winnerData.points > 0) winModal.style.display = 'inherit'
         else loseModal.style.display = 'inherit'
+
+        game = currentGameState
+
+        setTimeout(restartGame, 3000)
+    }
+}
+
+function restartGame() {
+    winModal.style.display = 'none'
+    loseModal.style.display = 'none'
+
+    const docs = document.getElementsByClassName("option")
+    for (let i = 0; i < docs.length; i++) {
+        docs[i].classList.remove('not-selected')
+        docs[i].classList.remove('selected')
     }
 }
 
 function selectOption(option) {
+    const docs = document.getElementsByClassName("option")
+    for (let i = 0; i < docs.length; i++) {
+        docs[i].classList.add('not-selected')
+    }
+    const removeDoc = document.getElementById(option)
+    removeDoc.classList.remove('not-selected')
+    removeDoc.classList.add('selected')
+    
     fetch('/game/option', {
         method: 'POST',
         headers: {
