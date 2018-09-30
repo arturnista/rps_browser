@@ -1,9 +1,11 @@
-const server = require('./httpServer')
+const Server = require('./httpServer')
+const server = new Server()
 
 server.get('/', (req, res) => {
-    console.log('GET para o /')
     res.html(200, './public/index.html')
-    // res.end('<h1>Dale</h1>')
+})
+server.get('/main.css', (req, res) => {
+    res.file(200, './public/css/main.css')
 })
 
 server.start(3000)

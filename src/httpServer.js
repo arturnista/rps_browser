@@ -37,7 +37,42 @@ class Server {
             res.setHeader('content-type', 'text/html')
             this.fsDeps.readFile(filename, 'utf-8', (error, fileData) => {
                 if(error) {
-                    res.statusCode = 500
+                    res.statusCode = 404
+                    res.write(`<h1>File ${filename} not found!</h1>`)
+                    res.end()
+                    return
+                }
+                res.write(fileData)
+                res.end()
+            })
+        }
+
+        res.file = (status, filename) => {
+            res.statusCode = status
+            let fileType = filename.match(/\.[^\.]*$/g)
+            if(fileType) fileType = fileType[0].substring(1)
+            else fileType = ''
+
+            let contentType = ''
+
+            switch (fileType) {
+                case 'js':
+                    contentType = 'application/javascript'
+                    break
+                case 'png':
+                case 'jpg':
+                case 'jpeg':
+                case 'gif':
+                    contentType = `image/${fileType}`
+                    break
+                default:
+                    contentType = `text/${fileType}`
+            }
+
+            res.setHeader('content-type', contentType)
+            this.fsDeps.readFile(filename, 'utf-8', (error, fileData) => {
+                if(error) {
+                    res.statusCode = 404
                     res.write(`<h1>File ${filename} not found!</h1>`)
                     res.end()
                     return
@@ -67,9 +102,9 @@ class Server {
     }
     
 
-    start(port, ip = 'localhost') {
-        this.server.listen(port, ip, () => {
-            console.log(`Game server running at http://${ip}:${port}`)
+    start(port) {
+        this.server.listen(port, () => {
+            console.log(`Server running at ${port}`)
         })
     }
 }

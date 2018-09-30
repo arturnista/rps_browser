@@ -503,6 +503,204 @@ describe('Http Server', () => {
             expect(resMock.statusCode).to.eql(200)
         })
 
+        it('should read the file, set header, write and end if call file method', (done) => {
+
+            const expectedServer = { server: 'object' }
+            const expectedResult = { some: 'data' }
+
+            let httpCreated = false
+            const deps = {
+                http: {
+                    createServer: (callback) => {
+                        httpCreated = true
+                        return expectedServer
+                    },
+                },
+                fs: {
+                    readFile: (filename, encode, callback) => {
+                        expect(encode).to.eql('utf-8')
+                        expect(filename).to.eql('./some/file.type')
+                        callback(null, 'type-file-content')
+                    }
+                }
+            }
+
+            let reqMock = {
+                method: 'GET',
+                url: '/'
+            }
+
+            let headerCalled = false
+            let writeCalled = false
+            let endCalled = false
+            let resMock = {
+                statusCode: 0,
+                setHeader: (name, value) => {
+                    expect(name).to.eql('content-type')
+                    expect(value).to.eql('text/type')
+                    headerCalled = true
+                },
+                write: (writeData) => {
+                    expect(writeData).to.eql('type-file-content')
+                    writeCalled = true
+                },
+                end: () => {
+                    endCalled = true
+                    done()
+                }
+            }
+
+            let callbackCalled = false
+            const expectedCallback = (req, res) => {
+                res.file(200, './some/file.type')
+                callbackCalled = true
+            }
+
+            const server = new Server(deps)
+            server.get('/', expectedCallback)
+            server.handleRequest(reqMock, resMock)
+
+            expect(httpCreated).to.be.ok()
+            expect(headerCalled).to.be.ok()
+            expect(writeCalled).to.be.ok()
+            expect(endCalled).to.be.ok()
+            expect(callbackCalled).to.be.ok()
+            expect(server.server).to.eql(expectedServer)
+            expect(resMock.statusCode).to.eql(200)
+        })
+
+        it('should read the file and set the content type as application/javascript if is a JS file', (done) => {
+
+            const expectedServer = { server: 'object' }
+            const expectedResult = { some: 'data' }
+
+            let httpCreated = false
+            const deps = {
+                http: {
+                    createServer: (callback) => {
+                        httpCreated = true
+                        return expectedServer
+                    },
+                },
+                fs: {
+                    readFile: (filename, encode, callback) => {
+                        expect(encode).to.eql('utf-8')
+                        expect(filename).to.eql('./some/file.js')
+                        callback(null, 'js-file-content')
+                    }
+                }
+            }
+
+            let reqMock = {
+                method: 'GET',
+                url: '/'
+            }
+
+            let headerCalled = false
+            let writeCalled = false
+            let endCalled = false
+            let resMock = {
+                statusCode: 0,
+                setHeader: (name, value) => {
+                    expect(name).to.eql('content-type')
+                    expect(value).to.eql('application/javascript')
+                    headerCalled = true
+                },
+                write: (writeData) => {
+                    expect(writeData).to.eql('js-file-content')
+                    writeCalled = true
+                },
+                end: () => {
+                    endCalled = true
+                    done()
+                }
+            }
+
+            let callbackCalled = false
+            const expectedCallback = (req, res) => {
+                res.file(200, './some/file.js')
+                callbackCalled = true
+            }
+
+            const server = new Server(deps)
+            server.get('/', expectedCallback)
+            server.handleRequest(reqMock, resMock)
+
+            expect(httpCreated).to.be.ok()
+            expect(headerCalled).to.be.ok()
+            expect(writeCalled).to.be.ok()
+            expect(endCalled).to.be.ok()
+            expect(callbackCalled).to.be.ok()
+            expect(server.server).to.eql(expectedServer)
+            expect(resMock.statusCode).to.eql(200)
+        })
+
+        it('should read the file and set the content type as image/png if is a Image file', (done) => {
+
+            const expectedServer = { server: 'object' }
+            const expectedResult = { some: 'data' }
+
+            let httpCreated = false
+            const deps = {
+                http: {
+                    createServer: (callback) => {
+                        httpCreated = true
+                        return expectedServer
+                    },
+                },
+                fs: {
+                    readFile: (filename, encode, callback) => {
+                        expect(encode).to.eql('utf-8')
+                        expect(filename).to.eql('./some/file.png')
+                        callback(null, 'png-file-content')
+                    }
+                }
+            }
+
+            let reqMock = {
+                method: 'GET',
+                url: '/'
+            }
+
+            let headerCalled = false
+            let writeCalled = false
+            let endCalled = false
+            let resMock = {
+                statusCode: 0,
+                setHeader: (name, value) => {
+                    expect(name).to.eql('content-type')
+                    expect(value).to.eql('image/png')
+                    headerCalled = true
+                },
+                write: (writeData) => {
+                    expect(writeData).to.eql('png-file-content')
+                    writeCalled = true
+                },
+                end: () => {
+                    endCalled = true
+                    done()
+                }
+            }
+
+            let callbackCalled = false
+            const expectedCallback = (req, res) => {
+                res.file(200, './some/file.png')
+                callbackCalled = true
+            }
+
+            const server = new Server(deps)
+            server.get('/', expectedCallback)
+            server.handleRequest(reqMock, resMock)
+
+            expect(httpCreated).to.be.ok()
+            expect(headerCalled).to.be.ok()
+            expect(writeCalled).to.be.ok()
+            expect(endCalled).to.be.ok()
+            expect(callbackCalled).to.be.ok()
+            expect(server.server).to.eql(expectedServer)
+            expect(resMock.statusCode).to.eql(200)
+        })
+
         it('should return a 500 if the file is not found', (done) => {
 
             const expectedServer = { server: 'object' }
@@ -566,7 +764,7 @@ describe('Http Server', () => {
             expect(endCalled).to.be.ok()
             expect(callbackCalled).to.be.ok()
             expect(server.server).to.eql(expectedServer)
-            expect(resMock.statusCode).to.eql(500)
+            expect(resMock.statusCode).to.eql(404)
         })
 
     })
@@ -575,15 +773,13 @@ describe('Http Server', () => {
 
         it('should add "/" method on GET', (done) => {
             const expectedPort = 5000
-            const expectedIp = 'my-ip'
 
             const deps = {
                 http: {
                     createServer: () => {
                         return {
-                            listen: (port, ip) => {
+                            listen: (port) => {
                                 expect(port).to.eql(expectedPort)
-                                expect(ip).to.eql(expectedIp)
                                 done()
                             }
                         }
@@ -595,7 +791,7 @@ describe('Http Server', () => {
             }
 
             const server = new Server(deps)
-            server.start(expectedPort, expectedIp)
+            server.start(expectedPort)
         })
 
     })
