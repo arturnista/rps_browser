@@ -189,6 +189,44 @@ describe('Game translator', () => {
             
         })
 
+        it('should return an error if leave throws', () => {
+
+            const expectedResult = {
+                id: 'game-id',
+                game: 'data'
+            }
+
+            const req = {
+                url: {
+                    searchParams: {
+                        get: () => {}
+                    }
+                }
+            }
+
+            const res = {
+                json: () => {}
+            }
+
+            intMock = sinon.mock(deps.Interactor.prototype)
+            intMock.expects('enter')
+                .once()
+                .returns(Promise.reject({ status: 400, error: 'message' }))
+
+            resMock = sinon.mock(res)
+            resMock.expects('json')
+                .once()
+                .withArgs(400, { status: 400, error: 'message' })
+
+            const translator = new GameTranslator(deps)
+            return translator.put(req, res)
+            .then(res => {
+                intMock.verify()
+                resMock.verify()
+            })
+            
+        })
+
     })
     
     describe('postLeave method', () => {

@@ -27,13 +27,31 @@ window.onload = () => {
             },
             body: JSON.stringify({ game: gameId })
         })
-        .then(res => res.json())
+        .then(res => {
+            return res.json()
+            .then(data => {
+                if(res.ok) return data
+                else throw data
+            })
+        })
         .then(res => {
             game = res.game
             player = { id: res.player }
 
             const playerNameText = document.getElementById('player-name')
             playerNameText.textContent = `Player ${player.id}`
+            
+            document.getElementById('enter-game-link').classList.add('hide')
+            document.getElementById('enter-game-input').classList.add('hide')
+        })
+        .catch(err => {
+            if(err.error === 'not-pvp') {
+                alert('You can only join PVP games!')
+                return window.location.replace('/')
+            } else if(err.error === 'not-found') {
+                alert('Game not found!')
+                return window.location.replace('/')
+            }
         })
     } else {
         fetch('/api/game', {
@@ -51,8 +69,8 @@ window.onload = () => {
             const playerNameText = document.getElementById('player-name')
             playerNameText.textContent = `Player ${player.id}`
 
-            document.getElementById('enter-game-link').setAttribute('href', `/?game=${game.id}`)
-            document.getElementById('enter-game-input').setAttribute('value', `${window.location.origin}/?game=${game.id}`)
+            document.getElementById('enter-game-link').setAttribute('href', `/game?game=${game.id}`)
+            document.getElementById('enter-game-input').setAttribute('value', `${window.location.origin}/game?game=${game.id}`)
         })
     }
 

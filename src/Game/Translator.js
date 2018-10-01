@@ -37,8 +37,8 @@ class Translator {
             const result = await interactor.enter(req.body)
             res.json(200, result)
         } catch(err) {
-            console.log(err)
-            res.json(500, err)
+            const errorCode = err.status || 500
+            res.json(errorCode, err)
         }
     }
 
@@ -49,8 +49,8 @@ class Translator {
             const result = await interactor.leave(req.body)
             res.json(200, result)
         } catch(err) {
-            console.log(err)
-            res.json(500, err)
+            const errorCode = err.status || 500
+            res.json(errorCode, err)
         }
     }
 

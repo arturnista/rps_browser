@@ -183,13 +183,15 @@ describe('Game Interactor', () => {
                 .withArgs('game-id')
                 .returns({
                     id: 'game-id',
-                    game: 'data'
+                    game: 'data',
+                    mode: 'pvp'
                 })
             entMock.expects('addPlayer')
                 .once()
                 .withArgs({
                     id: 'game-id',
-                    game: 'data'
+                    game: 'data',
+                    mode: 'pvp'
                 })
                 .returns({
                     game: {
@@ -220,6 +222,62 @@ describe('Game Interactor', () => {
             .then(result => {
                 expect(result).to.eql(expectedResult)
 
+                entMock.verify()
+            })
+        })
+
+        it('should return an error if the game is not found', () => {
+
+            const expectedResult = {
+                game: {
+                    id: 'game-id',
+                    game: 'data'
+                },
+                player: 'PLAYER-ID'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('game-id')
+                .returns(null)
+
+            const interactor = new GameInteractor(deps)
+            return interactor.enter({ game: 'game-id' })
+            .then(result => {
+                expect().fail('resolving an invalid test')
+            }, err => {
+                expect(err).to.eql({ status: 404, error: 'not-found' })
+                entMock.verify()
+            })
+        })
+
+        it('should not be possible to enter a non PVP game', () => {
+
+            const expectedResult = {
+                game: {
+                    id: 'game-id',
+                    game: 'data'
+                },
+                player: 'PLAYER-ID'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('game-id')
+                .returns({
+                    id: 'game-id',
+                    game: 'data',
+                    mode: 'not-pvp'
+                })
+
+            const interactor = new GameInteractor(deps)
+            return interactor.enter({ game: 'game-id' })
+            .then(result => {
+                expect().fail('resolving an invalid test')
+            }, err => {
+                expect(err).to.eql({ status: 409, error: 'not-pvp' })
                 entMock.verify()
             })
         })

@@ -26,6 +26,9 @@ class Interactor {
         const entity = new this.Entity()
         
         let gameData = entity.find(body.game)
+        if(!gameData) return Promise.reject({ status: 404, error: 'not-found' })            
+        if(gameData.mode != 'pvp') return Promise.reject({ status: 409, error: 'not-pvp' })
+
         let { game, player } = entity.addPlayer(gameData)
         game = entity.setGameState(game)
         return entity.update(game, 'enter')
