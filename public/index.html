@@ -12,21 +12,23 @@
 </head>
 <body>
     <header>
-        <h1>Rock, Paper and Scissors</h1>
+        <a href='/'>
+            <h1>Rock, Paper and Scissors</h1>
+        </a>
     </header>
     <content>
         <h2 class='game-selection-title'>Choose the game mode</h2>
-        <a class='game-selection' href='/game'>
+        <div class='game-selection' onclick="openModal()">
             <p>Player vs Player</p>
-        </a>
-        <a class='game-selection' href='/game'>
+        </div>
+        <a class='game-selection' href='/game?mode=pvc'>
             <p>Player vs Computer</p>
          </a>
-        <a class='game-selection' href='/game'>
+        <a class='game-selection' href='/game?mode=cvc'>
             <p>Computer vs Computer</p>
          </a>
 
-        <div id='pvp-modal' class='modal pvp'>
+        <div id='pvp-modal' class='modal pvp hide' onclick="closeModal()">
             <div class='modal-content pvp'>
                 <a class='btn-success' href='/game'>New game</a>
                 <p>Or...</p>

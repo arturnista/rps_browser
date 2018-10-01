@@ -4,7 +4,7 @@
   "description": "Rock, paper and scissors online game.",
   "main": "./src/server.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "node src/server.js",
     "test": "mocha --recursive --reporter progress tests",
     "watch": "mocha --recursive --reporter progress --watch tests"
   },

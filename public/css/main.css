@@ -31,8 +31,13 @@ header {
     align-content: center;
 }
 
-header h1 {
+header a {
+    text-decoration: none;
+}
+
+header a h1 {
     text-align: center;
+    color: #212121;
 }
 
 header div {

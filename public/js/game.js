@@ -10,6 +10,10 @@ window.onload = () => {
     endRoundModal = document.getElementById("end-round-modal")
     pointsSpan = document.getElementById("points-span")
 
+    let gameMode = window.location.search.match(/[\?\&]mode=[^\?^\&]*/g)
+    if(gameMode) gameMode = gameMode[0].replace('?mode=', '')
+    else gameMode = 'pvp'
+    
     let gameId = window.location.search.match(/[\?\&]game=[^\?^\&]*/g)
     if(gameId) gameId = gameId[0].replace('?game=', '')
 
@@ -36,7 +40,8 @@ window.onload = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ mode: gameMode })
         })
         .then(res => res.json())
         .then(res => {
@@ -100,6 +105,7 @@ function updateGameState(currentGameState) {
 
         // Recreate the player list
         for(const data of currentGameState.result) {
+            const lastRoundPlayer = currentGameState.lastRound.find(x => x.id === data.id)
             const playerItem = document.createElement('div')
             playerItem.classList.add('player-item')
             const playerName = document.createElement('p')
@@ -107,10 +113,14 @@ function updateGameState(currentGameState) {
             playerName.textContent = `Player ${data.id}`
             const playerPoints = document.createElement('p')
             playerPoints.classList.add('points')
-            playerPoints.textContent = `${data.points} point`
+            playerPoints.textContent = `${data.points} point (+${lastRoundPlayer.points})`
+            const playerOption = document.createElement('p')
+            playerOption.classList.add('points')
+            playerOption.textContent = `${lastRoundPlayer.option}`
             
             playerItem.appendChild(playerName)
             playerItem.appendChild(playerPoints)
+            playerItem.appendChild(playerOption)
             playerList.appendChild(playerItem)
         }
 

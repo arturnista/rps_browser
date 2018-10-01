@@ -10,11 +10,12 @@ class Interactor {
         return entity.find(id)
     }
     
-    create() {
+    create(body) {
         const entity = new this.Entity()
         
-        let gameData = entity.generateData()
+        let gameData = entity.generateData(body)
         let { game, player } = entity.addPlayer(gameData)
+        if(gameData.mode === 'pvc') game = entity.addPlayer(gameData).game
         const gameState = entity.setGameState(game)
         game = entity.create(Object.assign({}, game, gameState))
 
@@ -35,6 +36,8 @@ class Interactor {
         const entity = new this.Entity()
         
         let gameData = entity.find(body.game)
+        if(!gameData) return Promise.resolve(null)
+
         let game = entity.removePlayer(gameData, body.player)
         game = entity.setGameState(game)
         return entity.update(game, 'leave')
@@ -45,6 +48,11 @@ class Interactor {
         
         let game = entity.find(body.game)
         game = entity.updatePlayer(game, { id: body.player, option: body.option })
+        if(game.mode === 'pvc') {
+            const otherPlayer = game.players.find(x => x.id != body.player)
+            const randomOption = entity.getRandomOption(game)
+            game = entity.updatePlayer(game, { id: otherPlayer.id, option: randomOption })            
+        }
         game = entity.setGameState(game)
         return entity.update(game, 'playerOption')
     }

@@ -112,6 +112,7 @@ describe('Game Entity', () => {
                 id: 'NEW-ID',
                 players: [],
                 round: 0,
+                mode: 'pvp',
                 result: [],
                 config: {
                     rock: {
@@ -137,8 +138,40 @@ describe('Game Entity', () => {
             const result = entity.generateData()
             
             expect(result).to.eql(expectedResult)
+        })
 
-            adpMock.verify()
+        it('should generateData the game with empty players and status as waiting_player', () => {
+
+            const expectedResult = {
+                id: 'NEW-ID',
+                players: [],
+                round: 0,
+                mode: 'pvc',
+                result: [],
+                config: {
+                    rock: {
+                        win: ['scissors'],
+                        lose: ['paper'],
+                        draw: ['rock'],
+                    }, 
+                    scissors: {
+                        win: ['paper'],
+                        lose: ['rock'],
+                        draw: ['scissors'],
+                    }, 
+                    paper: {
+                        win: ['rock'],
+                        lose: ['scissors'],
+                        draw: ['paper'],
+                    }
+                },
+                status: 'waiting_player'
+            }
+
+            const entity = new GameEntity(deps)
+            const result = entity.generateData({ mode: 'pvc' })
+            
+            expect(result).to.eql(expectedResult)
         })
 
     })
@@ -384,8 +417,8 @@ describe('Game Entity', () => {
                     status: 'selecting'
                 }],
                 lastRound: [
-                    { id: '1', points: 0 },
-                    { id: '2', points: 1 },
+                    { id: '1', points: 0, option: 'rock' },
+                    { id: '2', points: 1, option: 'paper' },
                 ],
                 result: [
                     { id: '1', points: 0 },
@@ -474,10 +507,10 @@ describe('Game Entity', () => {
                     status: 'selecting'
                 }],
                 lastRound: [
-                    { id: '1', points: 1 },
-                    { id: '2', points: 1 },
-                    { id: '3', points: 2 },
-                    { id: '4', points: 1 },
+                    { id: '1', points: 1, option: 'rock' },
+                    { id: '2', points: 1, option: 'paper' },
+                    { id: '3', points: 2, option: 'scissors' },
+                    { id: '4', points: 1, option: 'paper' },
                 ],
                 result: [
                     { id: '1', points: 1 },
@@ -576,10 +609,10 @@ describe('Game Entity', () => {
                     status: 'selecting'
                 }],
                 lastRound: [
-                    { id: '1', points: 1 },
-                    { id: '2', points: 1 },
-                    { id: '3', points: 2 },
-                    { id: '4', points: 1 },
+                    { id: '1', points: 1, option: 'rock' },
+                    { id: '2', points: 1, option: 'paper' },
+                    { id: '3', points: 2, option: 'scissors' },
+                    { id: '4', points: 1, option: 'paper' },
                 ],
                 result: [
                     { id: '1', points: 2 },

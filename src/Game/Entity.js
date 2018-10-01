@@ -23,11 +23,12 @@ class Entity {
         return adapter.update(game, action)
     }
     
-    generateData() {
+    generateData(gameData = {}) {
         return {
             id: this.utils.generateID(),
             players: [],
             round: 0,
+            mode: gameData.mode || 'pvp',
             result: [],
             config: {
                 rock: {
@@ -94,12 +95,11 @@ class Entity {
                 return prev
             }, 0)
             
-            return { id: pl.id, points }
+            return { id: pl.id, points, option: pl.option }
         })
-
         const result = lastRound.map(x => {
             const currentResult = game.result.find(l => l.id == x.id)
-            if(!currentResult) return x
+            if(!currentResult) return { id: x.id, points: x.points }
             return {
                 id: x.id,
                 points: x.points + currentResult.points
@@ -109,6 +109,12 @@ class Entity {
         const players = game.players.map(x => Object.assign({}, x, { option: '', status: 'selecting' }))
 
         return Object.assign({}, game, { id: game.id, round: game.round + 1, players, status: 'playing', lastRound, result })
+    }
+    
+    getRandomOption(game) {
+        const options = Object.keys(game.config)
+        const index = Math.floor( Math.random() * options.length )
+        return options[index]
     }
 
 }

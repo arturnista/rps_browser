@@ -14,6 +14,7 @@ describe('Game Interactor', () => {
             removePlayer() {}
             updatePlayer() {}
             setGameState() {}
+            getRandomOption() {}
         }
     }
 
@@ -62,6 +63,7 @@ describe('Game Interactor', () => {
             entMock = sinon.mock(deps.Entity.prototype)
             entMock.expects('generateData')
                 .once()
+                .withArgs({ game: 'params' })
                 .returns({
                     id: 'game-id',
                     game: 'data'
@@ -97,7 +99,64 @@ describe('Game Interactor', () => {
                 })
 
             const interactor = new GameInteractor(deps)
-            const result = interactor.create()
+            const result = interactor.create({ game: 'params' })
+            
+            expect(result).to.eql(expectedResult)
+            
+            entMock.verify()
+        })
+
+        it('should create a new game and add two players if the game is a PVC', () => {
+
+            const expectedResult = {
+                game: {
+                    update: 'data'
+                }, 
+                player: 'NEW-ID'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('generateData')
+                .once()
+                .withArgs({ game: 'params' })
+                .returns({
+                    id: 'game-id',
+                    game: 'data',
+                    mode: 'pvc'
+                })
+            entMock.expects('addPlayer')
+                .twice()
+                .withArgs({
+                    id: 'game-id',
+                    game: 'data',
+                    mode: 'pvc'
+                })
+                .returns({
+                    game: {
+                        addPlayer: 'data'
+                    }, 
+                    player: 'NEW-ID'
+                })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    addPlayer: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('create')
+                .once()
+                .withArgs({
+                    addPlayer: 'data',
+                    setGameState: 'data'
+                })
+                .returns({
+                    update: 'data'
+                })
+
+            const interactor = new GameInteractor(deps)
+            const result = interactor.create({ game: 'params' })
             
             expect(result).to.eql(expectedResult)
             
@@ -223,6 +282,29 @@ describe('Game Interactor', () => {
             
         })
 
+        it('should return null if the game was not found', () => {
+
+            const expectedResult = {
+                id: 'game-id',
+                game: 'data'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('game-id')
+                .returns(null)
+
+            const interactor = new GameInteractor(deps)
+            return interactor.leave({ game: 'game-id', player: { player: 'data' }})
+            .then(result => {
+                expect(result).to.not.be.ok()
+
+                entMock.verify()
+            })
+            
+        })
+
     })
     
     describe('playerOption method', () => {
@@ -277,6 +359,119 @@ describe('Game Interactor', () => {
             })
             .then(result => {
                 expect(result).to.eql(expectedResult)
+                
+                entMock.verify()
+            })
+            
+        })
+
+        it('should update the player with the new option and update the other player if the mode is PVC', () => {
+
+            const expectedResult = {
+                id: 'GAME-ID',
+                game: 'data'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('GAME-ID')
+                .returns({
+                    id: 'GAME-ID',
+                    game: 'data',
+                    mode: 'pvc',
+                    players: [
+                        { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                    ]
+                })
+            
+            let updateCalled = 0
+            deps.Entity.prototype.updatePlayer = (game, player) => {
+                updateCalled++
+                switch(updateCalled) {
+                    case 1:
+                        expect(game).to.eql({
+                            id: 'GAME-ID',
+                            game: 'data',
+                            mode: 'pvc',
+                            players: [
+                                { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                            ]
+                        })
+                        expect(player).to.eql({ id: 'PLAYER-ID', option: 'rock' })
+                        return {
+                            id: 'GAME-ID',
+                            game: 'data',
+                            mode: 'pvc',
+                            players: [
+                                { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                            ]
+                        }
+                    case 2:
+                        expect(game).to.eql({
+                            id: 'GAME-ID',
+                            game: 'data',
+                            mode: 'pvc',
+                            players: [
+                                { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                            ]
+                        })
+                        expect(player).to.eql({ id: 'OTHER-ID', option: 'random-option' })
+                        return {
+                            id: 'GAME-ID',
+                            game: 'data',
+                            mode: 'pvc',
+                            players: [
+                                { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                            ]
+                        }
+                }
+            }
+            
+            entMock.expects('getRandomOption')
+                .once()
+                .withArgs({
+                    id: 'GAME-ID',
+                    game: 'data',
+                    mode: 'pvc',
+                    players: [
+                        { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                    ]
+                })
+                .returns('random-option')
+            
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    id: 'GAME-ID',
+                    game: 'data',
+                    mode: 'pvc',
+                    players: [
+                        { id: 'PLAYER-ID' }, { id: 'OTHER-ID' }
+                    ]
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('update')
+                .once()
+                .withArgs({
+                    setGameState: 'data'
+                })
+                .returns(Promise.resolve({
+                    id: 'GAME-ID',
+                    game: 'data'
+                }))
+
+            const interactor = new GameInteractor(deps)
+            return interactor.playerOption({
+                game: 'GAME-ID',
+                player: 'PLAYER-ID',
+                option: 'rock'
+            })
+            .then(result => {
+                expect(result).to.eql(expectedResult)
+                expect(updateCalled).to.eql(2)
                 
                 entMock.verify()
             })
