@@ -27,9 +27,17 @@ class Interactor {
         let gameData = entity.find(body.game)
         let { game, player } = entity.addPlayer(gameData)
         game = entity.setGameState(game)
-        game = entity.update(game)
-
-        return { game, player }
+        return entity.update(game, 'enter')
+        .then(game => ({ game, player }))
+    }
+    
+    leave(body) {
+        const entity = new this.Entity()
+        
+        let gameData = entity.find(body.game)
+        let game = entity.removePlayer(gameData, body.player)
+        game = entity.setGameState(game)
+        return entity.update(game, 'leave')
     }
 
     playerOption(body) {
@@ -38,9 +46,7 @@ class Interactor {
         let game = entity.find(body.game)
         game = entity.updatePlayer(game, { id: body.player, option: body.option })
         game = entity.setGameState(game)
-        game = entity.update(game)
-
-        return game
+        return entity.update(game, 'playerOption')
     }
 
 }

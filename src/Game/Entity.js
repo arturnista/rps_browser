@@ -17,10 +17,10 @@ class Entity {
         return adapter.create(game)
     }
 
-    update(game) {
+    update(game, action) {
         const adapter = new this.Adapter()
         
-        return adapter.update(game)
+        return adapter.update(game, action)
     }
     
     generateData() {
@@ -51,8 +51,6 @@ class Entity {
     }
 
     addPlayer(game) {
-        const adapter = new this.Adapter()
-        
         const playerData = {
             id: this.utils.generateID(),
             status: 'selecting',
@@ -66,9 +64,13 @@ class Entity {
         }
     }
 
-    updatePlayer(game, player) {
-        const adapter = new this.Adapter()
+    removePlayer(game, playerId) {
+        return Object.assign({}, game, {
+            players: game.players.filter(x => x.id !== playerId)
+        })
+    }
 
+    updatePlayer(game, player) {
         game.players = game.players.map(x => {
             if(x.id != player.id) return x
 
@@ -82,8 +84,8 @@ class Entity {
     }
 
     setGameState(game) {
-        if(game.players.length <= 1) return { id: game.id, status: 'waiting' }
-        if(!game.players.every(x => x.status === 'ready')) return { id: game.id, status: 'playing' }
+        if(game.players.length <= 1) return Object.assign({}, game, { id: game.id, status: 'waiting' })
+        if(!game.players.every(x => x.status === 'ready')) return Object.assign({}, game, { id: game.id, status: 'playing' })
         
         const lastRound = game.players.map(pl => {
             const points = game.players.reduce((prev, current) => {
@@ -106,7 +108,7 @@ class Entity {
 
         const players = game.players.map(x => Object.assign({}, x, { option: '', status: 'selecting' }))
 
-        return { id: game.id, round: game.round + 1, players, status: 'playing', lastRound, result }
+        return Object.assign({}, game, { id: game.id, round: game.round + 1, players, status: 'playing', lastRound, result })
     }
 
 }

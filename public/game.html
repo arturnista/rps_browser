@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rock, Paper and Scissors</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/game.css" />
+    <script src="/game.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Rock, Paper and Scissors</h1>
+        <div>
+            <input id='enter-game-input' />
+            <a id='enter-game-link' href=''>Enter</a>
+        </div>
+    </header>
+    <content>
+        <div class='game-option option' id='rock' onclick="selectOption('rock')">
+            <p>Rock</p>
+        </div>
+        <div class='game-option option' id='paper' onclick="selectOption('paper')">
+            <p>Paper</p>
+        </div>
+        <div class='game-option option' id='scissors' onclick="selectOption('scissors')">
+            <p>Scissors</p>
+        </div>
+
+        <div class="game-versus">
+            <p id='player-name' class='player'></p>
+            <p>VS</p>
+            <p id='versus-player-name'></p>
+        </div>
+
+        <div class='game-option'>
+            <p>Rock</p>
+        </div>
+        <div class='game-option'>
+            <p>Paper</p>
+        </div>
+        <div class='game-option'>
+            <p>Scissors</p>
+        </div>
+
+        <div id='end-round-modal' class='modal hide'>
+            <div class='modal-content'>
+                <p id='points-span'></p>
+                <div id='player-list' class='player-list'>
+                </div>
+            </div>
+        </div>
+        
+    </content>
+    <footer>
+
+    </footer>
+</body>
+
+</html>

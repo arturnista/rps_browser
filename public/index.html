@@ -7,56 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
-    <script src="/main.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/index.css" />
+    <script src="/index.js"></script>
 </head>
 <body>
     <header>
         <h1>Rock, Paper and Scissors</h1>
-        <div>
-            <input id='enter-game-input' />
-            <a id='enter-game-link' href=''>Enter</a>
-        </div>
     </header>
     <content>
-        <div class='game-option option' id='rock' onclick="selectOption('rock')">
-            <p>Rock</p>
-        </div>
-        <div class='game-option option' id='paper' onclick="selectOption('paper')">
-            <p>Paper</p>
-         </div>
-        <div class='game-option option' id='scissors' onclick="selectOption('scissors')">
-            <p>Scissors</p>
-        </div>
+        <h2 class='game-selection-title'>Choose the game mode</h2>
+        <a class='game-selection' href='/game'>
+            <p>Player vs Player</p>
+        </a>
+        <a class='game-selection' href='/game'>
+            <p>Player vs Computer</p>
+         </a>
+        <a class='game-selection' href='/game'>
+            <p>Computer vs Computer</p>
+         </a>
 
-        <div class="game-versus">
-            <p>VS</p>
-        </div>
-
-        <div class='game-option'>
-            <p>Rock</p>
-        </div>
-        <div class='game-option'>
-            <p>Paper</p>
-         </div>
-        <div class='game-option'>
-            <p>Scissors</p>
-        </div>
-
-        <div id='win-modal' class='modal win'>
-            <div class='modal-content win'>
-                <p>YOU WON!</p>
-            </div>
-        </div>
-
-        <div id='lose-modal' class='modal lose'>
-            <div class='modal-content lose'>
-                <p>YOU LOSE!</p>
-            </div>
-        </div>
-
-        <div id='draw-modal' class='modal draw'>
-            <div class='modal-content draw'>
-                <p>THAT'S A DRAW!</p>
+        <div id='pvp-modal' class='modal pvp'>
+            <div class='modal-content pvp'>
+                <a class='btn-success' href='/game'>New game</a>
+                <p>Or...</p>
+                <div>
+                    <input id="game-id-input" class='game-input' placeholder='Game id...' onchange="onChangeGameId()" type='text'/>
+                    <a class='btn-success' id="game-id-link">Enter a game</a>
+                </div>
             </div>
         </div>
     </content>

@@ -196,6 +196,61 @@ describe('Game Entity', () => {
         })
     })
     
+    describe('removePlayer method', () => {
+
+        it('should remove a new player to the game', () => {
+
+            const expectedResult = {
+                id: 'GAME-ID',
+                other: 'game-data',
+                players: []
+            }
+
+            const entity = new GameEntity(deps)
+            const result = entity.removePlayer({
+                id: 'GAME-ID',
+                other: 'game-data',
+                players: [{
+                    id: 'PLAYER-ID',
+                    status: 'selecting',
+                    option: ''
+                }]
+            }, 'PLAYER-ID')
+            
+            expect(result).to.eql(expectedResult)
+        })
+
+        it('should remove a new player to the game, even with other players', () => {
+
+            const expectedResult = {
+                id: 'GAME-ID',
+                other: 'game-data',
+                players: [{
+                    id: 'OTHER-PLAYER-ID',
+                    status: 'selecting',
+                    option: ''
+                }]
+            }
+
+            const entity = new GameEntity(deps)
+            const result = entity.removePlayer({
+                id: 'GAME-ID',
+                other: 'game-data',
+                players: [{
+                    id: 'PLAYER-ID',
+                    status: 'selecting',
+                    option: ''
+                }, {
+                    id: 'OTHER-PLAYER-ID',
+                    status: 'selecting',
+                    option: ''
+                }]
+            }, 'PLAYER-ID')
+            
+            expect(result).to.eql(expectedResult)
+        })
+    })
+    
     describe('updatePlayer method', () => {
 
         it('should update the player data, changing the status', () => {
@@ -242,7 +297,8 @@ describe('Game Entity', () => {
             
             const expectedResult = {
                 id: 'GAME-ID',
-                status: 'waiting'
+                status: 'waiting',
+                players: []
             }
 
             const gameData = {
@@ -262,7 +318,16 @@ describe('Game Entity', () => {
             
             const expectedResult = {
                 id: 'GAME-ID',
-                status: 'playing'
+                status: 'playing',
+                players: [{
+                    id: '1',
+                    option: '',
+                    status: 'selecting'
+                }, {
+                    id: '2',
+                    option: '',
+                    status: 'selecting'
+                }]
             }
 
             const gameData = {
@@ -292,6 +357,23 @@ describe('Game Entity', () => {
                 id: 'GAME-ID',
                 round: 1,
                 status: 'playing',
+                config: {
+                    rock: {
+                        win: ['scissors'],
+                        lose: ['paper'],
+                        draw: ['rock'],
+                    }, 
+                    scissors: {
+                        win: ['paper'],
+                        lose: ['rock'],
+                        draw: ['scissors'],
+                    }, 
+                    paper: {
+                        win: ['rock'],
+                        lose: ['scissors'],
+                        draw: ['paper'],
+                    }
+                },
                 players: [{
                     id: '1',
                     option: '',
@@ -357,6 +439,23 @@ describe('Game Entity', () => {
                 id: 'GAME-ID',
                 status: 'playing',
                 round: 1,
+                config: {
+                    rock: {
+                        win: ['scissors'],
+                        lose: ['paper'],
+                        draw: ['rock'],
+                    }, 
+                    scissors: {
+                        win: ['paper'],
+                        lose: ['rock'],
+                        draw: ['scissors'],
+                    }, 
+                    paper: {
+                        win: ['rock'],
+                        lose: ['scissors'],
+                        draw: ['paper'],
+                    }
+                },
                 players: [{
                     id: '1',
                     option: '',
@@ -442,6 +541,23 @@ describe('Game Entity', () => {
                 id: 'GAME-ID',
                 status: 'playing',
                 round: 1,
+                config: {
+                    rock: {
+                        win: ['scissors'],
+                        lose: ['paper'],
+                        draw: ['rock'],
+                    }, 
+                    scissors: {
+                        win: ['paper'],
+                        lose: ['rock'],
+                        draw: ['scissors'],
+                    }, 
+                    paper: {
+                        win: ['rock'],
+                        lose: ['scissors'],
+                        draw: ['paper'],
+                    }
+                },
                 players: [{
                     id: '1',
                     option: '',

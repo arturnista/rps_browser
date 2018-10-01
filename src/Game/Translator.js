@@ -30,11 +30,11 @@ class Translator {
         }
     }
 
-    put(req, res) {
+    async put(req, res) {
         const interactor = new this.Interactor()
         
         try {
-            const result = interactor.enter(req.body)
+            const result = await interactor.enter(req.body)
             res.json(200, result)
         } catch(err) {
             console.log(err)
@@ -42,11 +42,23 @@ class Translator {
         }
     }
 
-    postOption(req, res) {
+    async postLeave(req, res) {
         const interactor = new this.Interactor()
         
         try {
-            const result = interactor.playerOption(req.body)
+            const result = await interactor.leave(req.body)
+            res.json(200, result)
+        } catch(err) {
+            console.log(err)
+            res.json(500, err)
+        }
+    }
+
+    async postOption(req, res) {
+        const interactor = new this.Interactor()
+        
+        try {
+            const result = await interactor.playerOption(req.body)
             res.json(200, result)
         } catch(err) {
             console.log(err)

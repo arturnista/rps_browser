@@ -10,6 +10,7 @@ describe('Game translator', () => {
             create() {}
             enter() {}
             playerOption() {}
+            leave() {}
         }
     }
 
@@ -172,7 +173,7 @@ describe('Game translator', () => {
             intMock = sinon.mock(deps.Interactor.prototype)
             intMock.expects('enter')
                 .once()
-                .returns(expectedResult)
+                .returns(Promise.resolve(expectedResult))
 
             resMock = sinon.mock(res)
             resMock.expects('json')
@@ -180,10 +181,51 @@ describe('Game translator', () => {
                 .withArgs(200, expectedResult)
 
             const translator = new GameTranslator(deps)
-            translator.put(req, res)
+            return translator.put(req, res)
+            .then(res => {
+                intMock.verify()
+                resMock.verify()
+            })
             
-            intMock.verify()
-            resMock.verify()
+        })
+
+    })
+    
+    describe('postLeave method', () => {
+
+        it('should create the game and return the game data', () => {
+
+            const expectedResult = {
+                id: 'game-id',
+                game: 'data'
+            }
+
+            const req = {
+                body: { body: 'data' }
+            }
+
+            const res = {
+                json: () => {}
+            }
+
+            intMock = sinon.mock(deps.Interactor.prototype)
+            intMock.expects('leave')
+                .once()
+                .withArgs({ body: 'data' })
+                .returns(Promise.resolve(expectedResult))
+
+            resMock = sinon.mock(res)
+            resMock.expects('json')
+                .once()
+                .withArgs(200, expectedResult)
+
+            const translator = new GameTranslator(deps)
+            return translator.postLeave(req, res)
+            .then(res => {
+                intMock.verify()
+                resMock.verify()
+            })
+            
         })
 
     })
@@ -209,7 +251,7 @@ describe('Game translator', () => {
             intMock.expects('playerOption')
                 .once()
                 .withArgs({ body: 'data' })
-                .returns(expectedResult)
+                .returns(Promise.resolve(expectedResult))
 
             resMock = sinon.mock(res)
             resMock.expects('json')
@@ -217,10 +259,12 @@ describe('Game translator', () => {
                 .withArgs(200, expectedResult)
 
             const translator = new GameTranslator(deps)
-            translator.postOption(req, res)
+            return translator.postOption(req, res)
+            .then(res => {
+                intMock.verify()
+                resMock.verify()
+            })
             
-            intMock.verify()
-            resMock.verify()
         })
 
     })

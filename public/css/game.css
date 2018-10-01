@@ -1,0 +1,121 @@
+content {
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 20% 20% 20%;
+    justify-content: space-around;
+}
+
+.game-versus {
+    grid-column: 1 / 4;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+.game-versus p {
+    font-size: 2em;
+    text-align: center;
+}
+.game-versus .player {
+    /* color: #00600f; */
+    font-weight: bold;
+}
+
+.game-option {
+    height: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+
+    border: 1px #212121 solid;
+    background-color: #21212130;
+}
+
+.game-option.option {
+    align-self: self-end;
+
+    border: 1px #00600f solid;
+    background-color: #00600f30;
+
+    cursor: pointer;
+    transition: 300ms all;
+}
+.game-option.option:hover {
+    background-color: #00600f80;
+}
+.game-option.not-selected {
+    opacity: .5;
+}
+.game-option.selected {
+    align-self: self-end;
+    background-color: #00600f90;
+}
+
+.game-option p {
+    margin: 0;
+    text-align: center;
+    font-size: 1em;
+    transition: 300ms all;
+}
+.game-option.select:hover p {
+    /* font-size: 2em; */
+}
+
+.modal.win {
+    
+}
+
+.modal.win .modal-content {
+    border: 2px #6abf69 solid;
+    flex-direction: column;
+}
+
+.modal.lose {
+    
+}
+
+.modal.lose .modal-content {
+    border: 2px #db0e0e solid;
+    flex-direction: column;
+}
+
+.win-points {
+    font-size: 1.3em;
+    color: #6abf69;
+}
+
+.player-list {
+    margin-top: 1em;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1em;
+}
+
+.player-item {
+
+}
+
+.player-item .name {
+    font-size: .8em;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+
+.player-item.winning .name {
+    border-bottom: 1px solid #6abf69;
+}
+
+
+.player-item .points {
+
+}
+
+.player-item.winning .points {
+    color: #488547;
+    font-weight: bold;
+}

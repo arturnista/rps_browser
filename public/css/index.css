@@ -1,0 +1,49 @@
+content {
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 3em auto;
+    grid-gap: 1em;
+    justify-content: space-around;
+}
+
+.game-selection {
+    border: 1px #00600f solid;
+    background-color: #00600f30;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    transition: 300ms all;
+    text-decoration: none;
+}
+
+.game-selection:hover {
+    background-color: #00600f80;
+}
+
+.game-selection-title {
+    grid-column: 1 / 4;
+}
+
+.game-selection p {
+    text-align: center;
+    color: #212121;
+    font-weight: bold;
+}
+
+.modal-content.pvp {
+    flex-direction: column;
+}
+
+.modal-content.pvp p {
+    margin: 1em 0 1em 0;
+}
+
+.game-input {
+    border: 1px #212121 solid;
+    height: 3em;
+    padding: 0;
+    margin: 0;
+}

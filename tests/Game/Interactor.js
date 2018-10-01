@@ -11,6 +11,7 @@ describe('Game Interactor', () => {
             update() {}
             generateData() {}
             addPlayer() {}
+            removePlayer() {}
             updatePlayer() {}
             setGameState() {}
         }
@@ -150,17 +151,76 @@ describe('Game Interactor', () => {
                 .withArgs({
                     setGameState: 'data'
                 })
+                .returns(Promise.resolve({
+                    id: 'game-id',
+                    game: 'data'
+                }))
+
+            const interactor = new GameInteractor(deps)
+            return interactor.enter({ game: 'game-id' })
+            .then(result => {
+                expect(result).to.eql(expectedResult)
+
+                entMock.verify()
+            })
+        })
+
+    })
+    
+    describe('leave method', () => {
+
+        it('should find the game and add a player', () => {
+
+            const expectedResult = {
+                id: 'game-id',
+                game: 'data'
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('find')
+                .once()
+                .withArgs('game-id')
                 .returns({
                     id: 'game-id',
                     game: 'data'
                 })
+            entMock.expects('removePlayer')
+                .once()
+                .withArgs({
+                    id: 'game-id',
+                    game: 'data'
+                }, {
+                    player: 'data'
+                })
+                .returns({
+                    player: 'data'
+                })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    player: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('update')
+                .once()
+                .withArgs({
+                    setGameState: 'data'
+                })
+                .returns(Promise.resolve({
+                    id: 'game-id',
+                    game: 'data'
+                }))
 
             const interactor = new GameInteractor(deps)
-            const result = interactor.enter({ game: 'game-id' })
+            return interactor.leave({ game: 'game-id', player: { player: 'data' }})
+            .then(result => {
+                expect(result).to.eql(expectedResult)
+
+                entMock.verify()
+            })
             
-            expect(result).to.eql(expectedResult)
-            
-            entMock.verify()
         })
 
     })
@@ -204,21 +264,23 @@ describe('Game Interactor', () => {
                 .withArgs({
                     setGameState: 'data'
                 })
-                .returns({
+                .returns(Promise.resolve({
                     id: 'GAME-ID',
                     game: 'data'
-                })
+                }))
 
             const interactor = new GameInteractor(deps)
-            const result = interactor.playerOption({
+            return interactor.playerOption({
                 game: 'GAME-ID',
                 player: 'PLAYER-ID',
                 option: 'rock'
             })
+            .then(result => {
+                expect(result).to.eql(expectedResult)
+                
+                entMock.verify()
+            })
             
-            expect(result).to.eql(expectedResult)
-            
-            entMock.verify()
         })
 
     })
