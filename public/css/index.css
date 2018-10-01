@@ -41,9 +41,22 @@ content {
     margin: 1em 0 1em 0;
 }
 
+.game-btn {
+    text-decoration: none;
+}
+.game-btn p {
+    color: #212121;
+    text-align: center;
+    font-weight: bold;
+}
+
 .game-input {
     border: 1px #212121 solid;
     height: 3em;
     padding: 0;
     margin: 0;
+}
+
+.game-enter-btn {
+    display: block;
 }

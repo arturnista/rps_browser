@@ -1,3 +1,8 @@
+header h2 {
+    text-align: center;
+    margin: 0;
+}
+
 content {
     display: grid;
     grid-template-rows: 1fr auto;
@@ -5,6 +10,7 @@ content {
 
 .game-versus {
     text-align: center;
+    padding: 1em;
 
     display: flex;
     /* flex-direction: column; */
@@ -32,7 +38,7 @@ content {
     flex: 1;
     min-width: 20em;
     max-width: 20em;
-    margin: 1em;
+    margin: .3em;
     height: 10em;
 
     display: flex;

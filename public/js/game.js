@@ -19,60 +19,52 @@ window.onload = () => {
     if(gameId) gameId = gameId[0].replace('?game=', '')
 
     // If the gameID is defined
-    if(gameId) {
-        // Enter in a room
-        fetch('/api/game', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ game: gameId })
-        })
-        .then(res => {
-            return res.json()
-            .then(data => {
-                if(res.ok) return data
-                else throw data
-            })
-        })
-        .then(res => {
-            startGame(res)
-            
-            document.getElementById('enter-game-link').classList.add('hide')
-            document.getElementById('enter-game-input').classList.add('hide')
-        })
-        .catch(err => {
-            if(err.error === 'not-pvp') {
-                alert('You can only join PVP games!')
-                return window.location.replace('/')
-            } else if(err.error === 'not-found') {
-                alert('Game not found!')
-                return window.location.replace('/')
-            }
-        })
-    } else {
-        fetch('/api/game', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ mode: gameMode })
-        })
-        .then(res => {
-            return res.json()
-            .then(data => {
-                if(res.ok) return data
-                else throw data
-            })
-        })
-        .then(res => {
-            startGame(res)
+    if(gameId) enterGame(gameId)
+    else createGame()
 
-            document.getElementById('enter-game-link').setAttribute('href', `/game?game=${game.id}`)
-            document.getElementById('enter-game-input').setAttribute('value', `${window.location.origin}/game?game=${game.id}`)
-        })
-    }
+    pooling()
+}
 
+function createGame() {
+    fetch('/api/game', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mode: gameMode })
+    })
+    .then(res => {
+        return res.json()
+        .then(data => {
+            if(res.ok) return data
+            else throw data
+        })
+    })
+    .then(startGame)
+    .catch(errorHandler)
+}
+
+function enterGame(gameId) {
+    // Enter in a room
+    fetch('/api/game', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ game: gameId })
+    })
+    .then(res => {
+        return res.json()
+        .then(data => {
+            if(res.ok) return data
+            else throw data
+        })
+    })
+    .then(startGame)
+    .catch(errorHandler)
+}
+
+function pooling() {
     setInterval(function() {
 
         fetch(`/api/game?game=${game.id}`, {
@@ -89,17 +81,19 @@ window.onload = () => {
             })
         })
         .then(updateGameState)
-        .catch(err => {
-            if(err.error === 'not-pvp') {
-                alert('You can only join PVP games!')
-                return window.location.replace('/')
-            } else if(err.error === 'not-found') {
-                alert('Game not found!')
-                return window.location.replace('/')
-            }
-        })
+        .catch(errorHandler)
 
     }, 1000)
+}
+
+function errorHandler(err) {
+    if(err.error === 'not-pvp') {
+        alert('You can only join PVP games!')
+        return window.location.replace('/')
+    } else if(err.error === 'not-found') {
+        alert('Game not found!')
+        return window.location.replace('/')
+    }
 }
 
 function startGame(res) {
@@ -107,6 +101,8 @@ function startGame(res) {
     if(res.player) {
         player = { id: res.player }
     }
+
+    document.getElementById('game-id').textContent = `GameID: ${game.id}`
 
     // Remove the player list childs
     const optionsList = document.getElementById('game-option-list')
@@ -147,6 +143,7 @@ function computerPlayNext() {
 function updatePlayersText(game) {
     let playersText = ''
     const playerListContainer = document.getElementById('player-name-list')
+    while (playerListContainer.firstChild) playerListContainer.removeChild(playerListContainer.firstChild)
     
     for(const pl of game.players) {
 
@@ -154,17 +151,12 @@ function updatePlayersText(game) {
         const points = playerResult ? playerResult.points : 0
         const playerText = `Player ${pl.id} (${points})`
 
-        const playerElementId = `player_${pl.id}`
-        let playerElement = document.getElementById(playerElementId)
-        if(!playerElement) {
-            const playerElement = document.createElement('p')
-            playerElement.id = playerElementId
-
-            if(player && player.id === pl.id) playerElement.classList.add('mine')
-    
-            playerListContainer.appendChild(playerElement)
-        }
+        const playerElement = document.createElement('p')
+        if(player && player.id === pl.id) playerElement.classList.add('mine')
         playerElement.textContent = playerText
+
+        playerListContainer.appendChild(playerElement)
+
     }
 }
 
@@ -239,13 +231,17 @@ function restartGame() {
 }
 
 function selectOption(option, playerId) {
-    const docs = document.getElementsByClassName("option")
-    for (let i = 0; i < docs.length; i++) {
-        docs[i].classList.add('not-selected')
+    if(gameMode !== 'cvc') {
+
+        const docs = document.getElementsByClassName("option")
+        for (let i = 0; i < docs.length; i++) {
+            docs[i].classList.add('not-selected')
+        }
+        const removeDoc = document.getElementById(option)
+        removeDoc.classList.remove('not-selected')
+        removeDoc.classList.add('selected')
+
     }
-    const removeDoc = document.getElementById(option)
-    removeDoc.classList.remove('not-selected')
-    removeDoc.classList.add('selected')
 
     if(!playerId) playerId = player.id
     
@@ -258,6 +254,7 @@ function selectOption(option, playerId) {
     })
     .then(res => res.json())
     .then(updateGameState)
+    .catch(errorHandler)
 }
 
 function toTitle(str) {

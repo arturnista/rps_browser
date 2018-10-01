@@ -30,11 +30,15 @@
 
         <div id='pvp-modal' class='modal pvp hide' onclick="closeModal()">
             <div class='modal-content pvp'>
-                <a class='btn-success' href='/game'>New game</a>
+                <a class='btn-success game-btn' href='/game'>
+                    <p>New game</p>
+                </a>
                 <p>Or...</p>
                 <div>
                     <input id="game-id-input" class='game-input' placeholder='Game id...' onchange="onChangeGameId()" type='text'/>
-                    <a class='btn-success' id="game-id-link">Enter a game</a>
+                    <a class='btn-success game-btn game-enter-btn' id="game-id-link">
+                        <p>Enter a game</p>
+                    </a>
                 </div>
             </div>
         </div>
