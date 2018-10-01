@@ -23,30 +23,22 @@
         </div>
     </header>
     <content>
-        <div class='game-option option' id='rock' onclick="selectOption('rock')">
-            <p>Rock</p>
-        </div>
-        <div class='game-option option' id='paper' onclick="selectOption('paper')">
-            <p>Paper</p>
-        </div>
-        <div class='game-option option' id='scissors' onclick="selectOption('scissors')">
-            <p>Scissors</p>
+        <div class='game-option-list' id='game-option-list'>
+            <div class='game-option option' id='rock' onclick="selectOption('rock')">
+                <p>Rock</p>
+            </div>
+            <div class='game-option option' id='paper' onclick="selectOption('paper')">
+                <p>Paper</p>
+            </div>
+            <div class='game-option option' id='scissors' onclick="selectOption('scissors')">
+                <p>Scissors</p>
+            </div>
         </div>
 
         <div class="game-versus">
             <p id='player-name' class='player'></p>
             <p>VS</p>
             <p id='versus-player-name'></p>
-        </div>
-
-        <div class='game-option'>
-            <p>Rock</p>
-        </div>
-        <div class='game-option'>
-            <p>Paper</p>
-        </div>
-        <div class='game-option'>
-            <p>Scissors</p>
         </div>
 
         <div id='end-round-modal' class='modal hide'>

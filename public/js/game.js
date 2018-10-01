@@ -35,11 +35,7 @@ window.onload = () => {
             })
         })
         .then(res => {
-            game = res.game
-            player = { id: res.player }
-
-            const playerNameText = document.getElementById('player-name')
-            playerNameText.textContent = `Player ${player.id}`
+            startGame(res)
             
             document.getElementById('enter-game-link').classList.add('hide')
             document.getElementById('enter-game-input').classList.add('hide')
@@ -61,13 +57,15 @@ window.onload = () => {
             },
             body: JSON.stringify({ mode: gameMode })
         })
-        .then(res => res.json())
         .then(res => {
-            game = res.game
-            player = { id: res.player }
-
-            const playerNameText = document.getElementById('player-name')
-            playerNameText.textContent = `Player ${player.id}`
+            return res.json()
+            .then(data => {
+                if(res.ok) return data
+                else throw data
+            })
+        })
+        .then(res => {
+            startGame(res)
 
             document.getElementById('enter-game-link').setAttribute('href', `/game?game=${game.id}`)
             document.getElementById('enter-game-input').setAttribute('value', `${window.location.origin}/game?game=${game.id}`)
@@ -82,10 +80,61 @@ window.onload = () => {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
+        .then(res => {
+            return res.json()
+            .then(data => {
+                if(res.ok) return data
+                else throw data
+            })
+        })
         .then(updateGameState)
+        .catch(err => {
+            if(err.error === 'not-pvp') {
+                alert('You can only join PVP games!')
+                return window.location.replace('/')
+            } else if(err.error === 'not-found') {
+                alert('Game not found!')
+                return window.location.replace('/')
+            }
+        })
 
     }, 1000)
+}
+
+function startGame(res) {
+    game = res.game
+    player = { id: res.player }
+
+    const playerNameText = document.getElementById('player-name')
+    playerNameText.textContent = `Player ${player.id}`
+    
+    
+
+    // Remove the player list childs
+    const optionsList = document.getElementById('game-option-list')
+    while (optionsList.firstChild) optionsList.removeChild(optionsList.firstChild)
+
+    const options = Object.keys(game.config)
+    for(const opt of options) {
+        const gameOptionContainer = document.createElement('div')
+        gameOptionContainer.classList.add('game-option')
+        gameOptionContainer.classList.add('option')
+
+        gameOptionContainer.id = opt
+        gameOptionContainer.addEventListener('click', e => {
+            selectOption(opt)
+            return false
+        })
+
+        const gameOptionName = document.createElement('p')
+        gameOptionName.textContent = toTitle(opt)
+
+        gameOptionContainer.appendChild(gameOptionName)
+        optionsList.appendChild(gameOptionContainer)
+    }
+            // <div class='game-option option' id='rock' onclick="selectOption('rock')">
+            //     <p>Rock</p>
+            // </div>
 }
 
 function updateGameState(currentGameState) {
@@ -134,7 +183,7 @@ function updateGameState(currentGameState) {
             playerPoints.textContent = `${data.points} point (+${lastRoundPlayer.points})`
             const playerOption = document.createElement('p')
             playerOption.classList.add('points')
-            playerOption.textContent = `${lastRoundPlayer.option}`
+            playerOption.textContent = `${toTitle(lastRoundPlayer.option)}`
             
             playerItem.appendChild(playerName)
             playerItem.appendChild(playerPoints)
@@ -178,6 +227,12 @@ function selectOption(option) {
     })
     .then(res => res.json())
     .then(updateGameState)
+}
+
+function toTitle(str) {
+    str = str.replace(/\_/g, ' ')
+    const first = str.charAt(0).toUpperCase()
+    return first + str.substring(1)
 }
 
 window.addEventListener("beforeunload", function (event) {

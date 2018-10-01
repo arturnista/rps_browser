@@ -1,12 +1,9 @@
 content {
-    padding: 1em;
     display: grid;
-    grid-template-columns: 20% 20% 20%;
-    justify-content: space-around;
+    grid-template-rows: 1fr 1fr;
 }
 
 .game-versus {
-    grid-column: 1 / 4;
     text-align: center;
 
     display: flex;
@@ -23,7 +20,18 @@ content {
     font-weight: bold;
 }
 
+.game-option-list {
+    padding: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
 .game-option {
+    flex: 1;
+    min-width: 20em;
+    max-width: 20em;
+    margin: 1em;
     height: 50%;
 
     display: flex;
