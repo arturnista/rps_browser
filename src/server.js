@@ -44,4 +44,5 @@ server.get('/game.js', (req, res) => {
     res.file(200, './public/js/game.js')
 })
 
-server.start(3000)
+const port = process.env.PORT || 3000
+server.start(port)
