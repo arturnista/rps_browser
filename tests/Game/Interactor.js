@@ -51,7 +51,7 @@ describe('Game Interactor', () => {
     
     describe('create method', () => {
 
-        it('should create a new game and add a player', () => {
+        it('should create a new game and add a player if the game is a PVP', () => {
 
             const expectedResult = {
                 game: {
@@ -66,13 +66,15 @@ describe('Game Interactor', () => {
                 .withArgs({ game: 'params' })
                 .returns({
                     id: 'game-id',
-                    game: 'data'
+                    game: 'data',
+                    mode: 'pvp'
                 })
             entMock.expects('addPlayer')
                 .once()
                 .withArgs({
                     id: 'game-id',
-                    game: 'data'
+                    game: 'data',
+                    mode: 'pvp'
                 })
                 .returns({
                     game: {
@@ -130,6 +132,63 @@ describe('Game Interactor', () => {
                     id: 'game-id',
                     game: 'data',
                     mode: 'pvc'
+                })
+                .returns({
+                    game: {
+                        addPlayer: 'data'
+                    }, 
+                    player: 'NEW-ID'
+                })
+            entMock.expects('setGameState')
+                .once()
+                .withArgs({
+                    addPlayer: 'data'
+                })
+                .returns({
+                    setGameState: 'data'
+                })
+            entMock.expects('create')
+                .once()
+                .withArgs({
+                    addPlayer: 'data',
+                    setGameState: 'data'
+                })
+                .returns({
+                    update: 'data'
+                })
+
+            const interactor = new GameInteractor(deps)
+            const result = interactor.create({ game: 'params' })
+            
+            expect(result).to.eql(expectedResult)
+            
+            entMock.verify()
+        })
+
+        it('should create a new game and add two players if the game is a CVC, not returning the player', () => {
+
+            const expectedResult = {
+                game: {
+                    update: 'data'
+                }, 
+                player: null
+            }
+
+            entMock = sinon.mock(deps.Entity.prototype)
+            entMock.expects('generateData')
+                .once()
+                .withArgs({ game: 'params' })
+                .returns({
+                    id: 'game-id',
+                    game: 'data',
+                    mode: 'cvc'
+                })
+            entMock.expects('addPlayer')
+                .twice()
+                .withArgs({
+                    id: 'game-id',
+                    game: 'data',
+                    mode: 'cvc'
                 })
                 .returns({
                     game: {

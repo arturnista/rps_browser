@@ -3,6 +3,7 @@ let player = null
 let endRoundModal = null
 let pointsSpan = null
 let lastRoundNumber = 0
+let gameMode = ''
 
 let playersAgainst = 0
 
@@ -10,7 +11,7 @@ window.onload = () => {
     endRoundModal = document.getElementById("end-round-modal")
     pointsSpan = document.getElementById("points-span")
 
-    let gameMode = window.location.search.match(/[\?\&]mode=[^\?^\&]*/g)
+    gameMode = window.location.search.match(/[\?\&]mode=[^\?^\&]*/g)
     if(gameMode) gameMode = gameMode[0].replace('?mode=', '')
     else gameMode = 'pvp'
     
@@ -103,12 +104,9 @@ window.onload = () => {
 
 function startGame(res) {
     game = res.game
-    player = { id: res.player }
-
-    const playerNameText = document.getElementById('player-name')
-    playerNameText.textContent = `Player ${player.id}`
-    
-    
+    if(res.player) {
+        player = { id: res.player }
+    }
 
     // Remove the player list childs
     const optionsList = document.getElementById('game-option-list')
@@ -118,7 +116,7 @@ function startGame(res) {
     for(const opt of options) {
         const gameOptionContainer = document.createElement('div')
         gameOptionContainer.classList.add('game-option')
-        gameOptionContainer.classList.add('option')
+        if(player) gameOptionContainer.classList.add('option')
 
         gameOptionContainer.id = opt
         gameOptionContainer.addEventListener('click', e => {
@@ -132,36 +130,65 @@ function startGame(res) {
         gameOptionContainer.appendChild(gameOptionName)
         optionsList.appendChild(gameOptionContainer)
     }
-            // <div class='game-option option' id='rock' onclick="selectOption('rock')">
-            //     <p>Rock</p>
-            // </div>
+
+    computerPlayNext()
+}
+
+function computerPlayNext() {
+    if(gameMode !== 'cvc') return
+
+    const options = Object.keys(game.config)
+    setTimeout(() => {
+        const index = Math.floor( Math.random() * options.length )
+        selectOption(options[index], game.players[0].id)
+    }, 1500)
+}
+
+function updatePlayersText(game) {
+    let playersText = ''
+    const playerListContainer = document.getElementById('player-name-list')
+    
+    for(const pl of game.players) {
+
+        const playerResult = game.result.find(x => x.id === pl.id)
+        const points = playerResult ? playerResult.points : 0
+        const playerText = `Player ${pl.id} (${points})`
+
+        const playerElementId = `player_${pl.id}`
+        let playerElement = document.getElementById(playerElementId)
+        if(!playerElement) {
+            const playerElement = document.createElement('p')
+            playerElement.id = playerElementId
+
+            if(player && player.id === pl.id) playerElement.classList.add('mine')
+    
+            playerListContainer.appendChild(playerElement)
+        }
+        playerElement.textContent = playerText
+    }
 }
 
 function updateGameState(currentGameState) {
     // If the players amount has changed
     if(currentGameState.players.length > 1 && playersAgainst !== currentGameState.players.length) {
-        const playerNameText = document.getElementById('versus-player-name')
-        if(currentGameState.players.length === 2) {
-            const otherPlayer = currentGameState.players.find(x => x.id != player.id)
-            playerNameText.textContent = `Player ${otherPlayer.id}`
-        } else {
-            playerNameText.textContent = `${currentGameState.players.length - 1} players`
-        }
-
-        playersAgainst = currentGameState.players.length
+        updatePlayersText(currentGameState)
     }
 
     // If a round ended
     if(currentGameState.round !== game.round) {
-        // Find if you won any points
-        const yourData = currentGameState.lastRound.find(x => x.id == player.id)
-        
-        if(yourData.points > 0) {
-            pointsSpan.textContent = `You won ${yourData.points} POINT${yourData.points > 1 ? 'S': ''}`
-            endRoundModal.classList.add('win')
+        if(player) {
+            // Find if you won any points
+            const yourData = currentGameState.lastRound.find(x => x.id == player.id)
+            
+            if(yourData.points > 0) {
+                pointsSpan.textContent = `You won ${yourData.points} POINT${yourData.points != 1 ? 'S': ''}`
+                endRoundModal.classList.add('win')
+            } else {
+                pointsSpan.textContent = 'No points this round'
+                endRoundModal.classList.add('lose')
+            }
         } else {
-            pointsSpan.textContent = 'No points this round'
-            endRoundModal.classList.add('lose')
+            pointsSpan.textContent = ''
         }
 
         endRoundModal.classList.remove('hide')
@@ -180,7 +207,7 @@ function updateGameState(currentGameState) {
             playerName.textContent = `Player ${data.id}`
             const playerPoints = document.createElement('p')
             playerPoints.classList.add('points')
-            playerPoints.textContent = `${data.points} point (+${lastRoundPlayer.points})`
+            playerPoints.textContent = `${data.points} point${data.points != 1 ? 's' : ''} ${lastRoundPlayer.points > 0 ? `(+${lastRoundPlayer.points})` : ''}`
             const playerOption = document.createElement('p')
             playerOption.classList.add('points')
             playerOption.textContent = `${toTitle(lastRoundPlayer.option)}`
@@ -207,9 +234,11 @@ function restartGame() {
         docs[i].classList.remove('not-selected')
         docs[i].classList.remove('selected')
     }
+
+    computerPlayNext()
 }
 
-function selectOption(option) {
+function selectOption(option, playerId) {
     const docs = document.getElementsByClassName("option")
     for (let i = 0; i < docs.length; i++) {
         docs[i].classList.add('not-selected')
@@ -217,13 +246,15 @@ function selectOption(option) {
     const removeDoc = document.getElementById(option)
     removeDoc.classList.remove('not-selected')
     removeDoc.classList.add('selected')
+
+    if(!playerId) playerId = player.id
     
     fetch('/api/game/option', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ option, game: game.id, player: player.id })
+        body: JSON.stringify({ option, game: game.id, player: playerId })
     })
     .then(res => res.json())
     .then(updateGameState)

@@ -1,21 +1,22 @@
 content {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr auto;
 }
 
 .game-versus {
     text-align: center;
 
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     justify-content: center;
     align-content: center;
 }
 .game-versus p {
+    margin-right: 1em;
     font-size: 2em;
     text-align: center;
 }
-.game-versus .player {
+.game-versus .mine {
     /* color: #00600f; */
     font-weight: bold;
 }
@@ -32,7 +33,7 @@ content {
     min-width: 20em;
     max-width: 20em;
     margin: 1em;
-    height: 50%;
+    height: 10em;
 
     display: flex;
     flex-direction: column;
@@ -100,8 +101,8 @@ content {
     margin-top: 1em;
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 1em;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3em;
 }
 
 .player-item {
@@ -109,7 +110,6 @@ content {
 }
 
 .player-item .name {
-    font-size: .8em;
     font-weight: bold;
     border-bottom: 1px solid #ccc;
 }
@@ -120,7 +120,7 @@ content {
 
 
 .player-item .points {
-
+    font-size: 1.2em;
 }
 
 .player-item.winning .points {
