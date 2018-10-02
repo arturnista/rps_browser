@@ -73,7 +73,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #21212180;
+    background-color: rgba(33, 33, 33, 0.5);
 }
 
 .modal-content {
@@ -101,7 +101,7 @@ footer {
 
 .btn-success {
     border: 1px #00600f solid;
-    background-color: #00600f30;
+    background-color: rgba(0, 96, 15, 0.2);
     height: 3em;
 
     cursor: pointer;
@@ -109,5 +109,5 @@ footer {
 }
 
 .btn-success:hover {
-    background-color: #00600f80;
+    background-color: rgba(0, 96, 15, 0.5);
 }

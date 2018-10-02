@@ -9,7 +9,7 @@ content {
 
 .game-selection {
     border: 1px #00600f solid;
-    background-color: #00600f30;
+    background-color: rgba(0, 96, 15, 0.2);
 
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@ content {
 }
 
 .game-selection:hover {
-    background-color: #00600f80;
+    background-color: rgba(0, 96, 15, 0.5);
 }
 
 .game-selection-title {
