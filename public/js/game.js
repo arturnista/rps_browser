@@ -162,7 +162,7 @@ function updatePlayersText(game) {
 
 function updateGameState(currentGameState) {
     // If the players amount has changed
-    if(currentGameState.players.length > 1 && playersAgainst !== currentGameState.players.length) {
+    if(game.players.length !== currentGameState.players.length) {
         updatePlayersText(currentGameState)
     }
 
@@ -210,6 +210,7 @@ function updateGameState(currentGameState) {
             playerList.appendChild(playerItem)
         }
 
+        updatePlayersText(currentGameState)
         setTimeout(restartGame, 3000)
     }
 
